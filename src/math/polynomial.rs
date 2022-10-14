@@ -1,6 +1,5 @@
 use crate::math::complex::Complex;
 use std::fmt;
-use itertools::Itertools; // 0.8.0
 
 #[derive(Debug)]
 pub struct Polynomial {
@@ -58,11 +57,11 @@ impl Polynomial {
 impl fmt::Display for Polynomial {
 
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let res: String = self.coeff.iter().enumerate()
+        let res = self.coeff.iter().enumerate()
             .filter(|(_, coef)| **coef > 0)
             .map(|(index, coef)| Polynomial::show_part(index, *coef))
-            .intersperse(" + ".to_string())
-            .collect();
+            .reduce(|a, b| a + " + " + &b)
+            .unwrap_or(String::from(""));
 
         write!(f, "{}", res)
     }
