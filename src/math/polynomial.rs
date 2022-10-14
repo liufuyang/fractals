@@ -1,5 +1,6 @@
 use crate::math::complex::Complex;
 use std::fmt;
+use itertools::Itertools; // 0.8.0
 
 #[derive(Debug)]
 pub struct Polynomial {
@@ -42,23 +43,26 @@ impl Polynomial {
 
         r
     }
+
+    fn show_part(index: usize, coef: i32) -> String {
+        let s_coef = if coef == 1 { String::from("") } else { format!("{}", coef) };
+        match  index {
+            0 => format!("{}", coef),
+            1 => format!("{}x", s_coef),
+            _ => format!("{}x^{}", s_coef, index),
+        }
+    }
 }
 
 
 impl fmt::Display for Polynomial {
+
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // todo maybe there is some functional style map and join
-        let mut res = String::from("");
-        let len: usize = self.coeff.len();
-        for (index, coef) in self.coeff.iter().enumerate() {
-            // todo filter 0
-            // todo simplify
-            res = res + &String::from(format!("{}x^{}", coef, index));
-            // todo negative numbers
-            if index != len - 1 {
-                res = res + " + "
-            }
-        }
+        let res: String = self.coeff.iter().enumerate()
+            .filter(|(_, coef)| **coef > 0)
+            .map(|(index, coef)| Polynomial::show_part(index, *coef))
+            .intersperse(" + ".to_string())
+            .collect();
 
         write!(f, "{}", res)
     }
@@ -98,5 +102,33 @@ mod tests {
         // y = 1 + x + 2x^2 + 3x^3 + 5x^4 + 8x^5
         // y' = 1 + 4x + 9x^2 + 20x^4 + 40x^5
         assert_eq!(vec![1, 4, 9, 20, 40], pol.derivative().coeff);
+    }
+
+    #[test]
+    fn display_constant() {
+        // y = 1
+        let pol = Polynomial::new(vec![1]);
+        assert_eq!("1", format!("{}", pol));
+    }
+
+    #[test]
+    fn display_linear() {
+        // y = x
+        let pol = Polynomial::new(vec![0, 1]);
+        assert_eq!("x", format!("{}", pol));
+    }
+
+    #[test]
+    fn display_pol2() {
+        // y = x ^ 2
+        let pol = Polynomial::new(vec![0, 0, 1]);
+        assert_eq!("x^2", format!("{}", pol));
+    }
+
+    #[test]
+    fn display_pol5() {
+        let pol = Polynomial::new(vec![1, 1, 2, 3, 5, 8]);
+        // y = 1 + x + 2x^2 + 3x^3 + 5x^4 + 8x^5
+        assert_eq!("1 + x + 2x^2 + 3x^3 + 5x^4 + 8x^5", format!("{}", pol));
     }
 }
