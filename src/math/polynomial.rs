@@ -31,16 +31,13 @@ impl Polynomial {
     }
 
     pub fn evaluate(&self, z: &Complex) -> Complex {
-        let mut r = Complex::zero();
-
-        for (index, coef) in self.coeff.iter().enumerate() {
-            // todo we can improve the performance of the code by using int powers here
-            let p = z.powf(index as f64);
-            let pm = p.multiply(*coef as f64);
-            r = r + pm
-        }
-
-        r
+        self.coeff.iter()
+            .enumerate()
+            .fold(Complex::zero(), |acc, (index, coef)| {
+                let p = z.powf(index as f64);
+                let pm = p.multiply(*coef as f64);
+                acc + pm
+            })
     }
 
     fn show_part(index: usize, coef: i32) -> String {
