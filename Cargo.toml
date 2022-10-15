@@ -18,3 +18,8 @@ criterion = "0.3"
 [[bench]]
 name = "solution_benchmark"
 harness = false
+
+[[bench]]
+name = "rendering_benchmark"
+harness = false
+target_time = 100
