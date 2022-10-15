@@ -22,4 +22,3 @@ harness = false
 [[bench]]
 name = "rendering_benchmark"
 harness = false
-target_time = 100
