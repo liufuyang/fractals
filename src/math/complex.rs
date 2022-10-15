@@ -48,7 +48,7 @@ impl Complex {
 
 impl PartialEq for Complex {
     fn eq(&self, other: &Self) -> bool {
-        (*self - *other).abs() < 0.00001
+        (*self - *other).abs() < 0.001
     }
 }
 
@@ -97,6 +97,10 @@ impl Mul<f64> for Complex {
 
 impl fmt::Display for Complex {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}+{}i", self.re, self.im)
+        if self.im >= 0.0 {
+            write!(f, "{:.3} + {:.3}i", self.re, self.im)
+        } else {
+            write!(f, "{:.3} - {:.3}i", self.re, self.im.abs())
+        }
     }
 }
