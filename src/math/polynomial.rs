@@ -18,12 +18,10 @@ impl Polynomial {
             return Polynomial::new(vec![])
         }
 
-        // todo size hint?
-        let mut new_coef: Vec<i32> = Vec::new();
-        for i in 1..self.coeff.len() {
-            let nc: i32 = self.coeff[i] * ((i as i32));
-            new_coef.push(nc)
-        }
+        let new_coef = self.coeff.iter().enumerate()
+            .skip(1)
+            .map(|(index, coef)| coef * (index as i32))
+            .collect();
 
         Polynomial {
             coeff: new_coef
