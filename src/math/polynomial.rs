@@ -32,7 +32,7 @@ impl Polynomial {
         self.coeff.iter()
             .enumerate()
             .fold(Complex::zero(), |acc, (index, coef)| {
-                let p = z.powf(index as f64);
+                let p = z.powi(index as i32);
                 let pm = p * (*coef as f64);
                 acc + pm
             })

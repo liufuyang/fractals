@@ -25,6 +25,15 @@ impl Complex {
         }
     }
 
+    pub fn powi(&self, p: i32) -> Self {
+        let r = self.abs().powi(p);
+        let theta = self.arg() * (p as f64);
+        Complex {
+            re: f64::cos(theta) * r,
+            im: f64::sin(theta) * r
+        }
+    }
+
     pub fn euclidean_distance(&self, other: &Self) -> f64 {
         ((self.re - other.re).powi(2) + (self.im - other.im).powi(2)).sqrt()
     }
