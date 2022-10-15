@@ -20,8 +20,8 @@ impl Polynomial {
 
         // todo size hint?
         let mut new_coef: Vec<i32> = Vec::new();
-        for i in 0..(self.coeff.len() - 1) {
-            let nc: i32 = self.coeff[i+1] * ((i as i32) + 1);
+        for i in 1..self.coeff.len() {
+            let nc: i32 = self.coeff[i] * ((i as i32));
             new_coef.push(nc)
         }
 
