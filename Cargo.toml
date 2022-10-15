@@ -15,5 +15,5 @@ use = "0.0.0"
 criterion = "0.3"
 
 [[bench]]
-name = "image_benchmark"
+name = "solution_benchmark"
 harness = false
