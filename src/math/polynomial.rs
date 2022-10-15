@@ -33,7 +33,7 @@ impl Polynomial {
             .enumerate()
             .fold(Complex::zero(), |acc, (index, coef)| {
                 let p = z.powf(index as f64);
-                let pm = p.multiply(*coef as f64);
+                let pm = p * (*coef as f64);
                 acc + pm
             })
     }

@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub, Div};
+use std::ops::{Add, Sub, Div, Mul};
 use std::fmt;
 
 #[derive(Debug, Copy, Clone)]
@@ -76,11 +76,12 @@ impl Div for Complex {
     }
 }
 
-impl Complex {
-    pub fn multiply(self, f: f64) -> Self {
+impl Mul<f64> for Complex {
+    type Output = Self;
+    fn mul(self, rhs: f64) -> Self::Output {
         Self {
-            re: self.re * f,
-            im: self.im * f
+            re: self.re * rhs,
+            im: self.im * rhs
         }
     }
 }
