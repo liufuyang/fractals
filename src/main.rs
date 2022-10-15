@@ -63,7 +63,7 @@ fn main() {
     for (i, j) in field.iterate() {
         let (re, im) = field.project((i, j));
         let point = Complex { re, im };
-        let (root, iter) = newton_method_approximate(&pol, point);
+        let (root, iter) = newton_method_approximate(&pol, point, 9);
         let color = colors[(iter % colors.len() as u32) as usize];
         image.put_pixel(i as u32, j as u32, color);
         pb.inc(1);
