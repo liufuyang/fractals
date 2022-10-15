@@ -7,8 +7,6 @@ pub struct Complex {
     pub im: f64
 }
 
-// todo read up on operator overloading in Rust.
-// there are some traits like Mul<T> that I saw in the errors
 impl Complex {
     pub fn abs(&self) -> f64 {
         (self.re.powi(2) + self.im.powi(2)).sqrt()
@@ -21,11 +19,9 @@ impl Complex {
     pub fn powf(&self, p: f64) -> Self {
         let r = self.abs().powf(p);
         let theta = p * self.arg();
-        // todo there should be a nicer way of writing math functions
-        // I'd want to see cos(theta) intead of theta.cos()
         Complex {
-            re: theta.cos() * r,
-            im: theta.sin() * r
+            re: f64::cos(theta) * r,
+            im: f64::sin(theta) * r
         }
     }
 
