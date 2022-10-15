@@ -56,11 +56,6 @@ impl Field {
     }
 }
 
-struct RootPoint {
-    root: Complex,
-    iter: u32
-}
-
 fn clamp01(v: f64) -> f64 {
     f64::min(f64::max(0., v), 1.)
 }
@@ -73,31 +68,21 @@ fn hsl_to_rgb(color: Hsl) -> Rgb<u8> {
         ])
 }
 
-fn color_from_root(roots: &Vec<Complex>, root: RootPoint) -> Hsl {
-    for r in roots {
-        if *r == root.root {
-            let hue = clamp01(f64::abs(0.5 - root.root.arg() / (PI * 2.))) * 360.;
-            let sat = clamp01(f64::abs(0.59 / root.root.abs())) * 100.;
-            let lum = 0.95 * f64::max(1.0 - root.iter as f64 * 0.025, 0.05) * 100.;
-            return Hsl::from(hue as f32, sat as f32, lum as f32);
-        }
-    }
-
-    Hsl::from(0., 0., 0.)
+fn color_from_root(root: Complex, iter: u32, max_iter: u32) -> Hsl {
+    let hue = clamp01(f64::abs(0.5 - root.arg() / (PI * 2.))) * 360.;
+    let sat = clamp01(f64::abs(0.5 / root.abs())) * 100.;
+    let lum = ((max_iter - iter) as f32) / (max_iter as f32) * 100.;
+    Hsl::from(hue as f32, sat as f32, lum as f32)
 }
 
 pub fn render_image(pol: Polynomial, field: Field) -> RgbImage {
     let mut image = RgbImage::new(field.ssize, field.ssize);
-    let mut roots = vec![];
+    let max_iter = 100;
     for (i, j) in field.iterate() {
         let (re, im) = field.project((i, j));
         let point = Complex { re, im };
-        let (root, iter) = newton_method_approximate(&pol, point, 100);
-        if !roots.contains(&root) {
-            roots.push(root);
-        }
-        let rp = RootPoint { root, iter };
-        let color = color_from_root(&roots, rp);
+        let (root, iter) = newton_method_approximate(&pol, point, max_iter);
+        let color = color_from_root(root, iter, max_iter);
         image.put_pixel(i, j, hsl_to_rgb(color));
     }
 
