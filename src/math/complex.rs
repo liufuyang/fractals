@@ -41,6 +41,12 @@ impl Complex {
     }
 }
 
+impl PartialEq for Complex {
+    fn eq(&self, other: &Self) -> bool {
+        (*self - *other).abs() < 0.00001
+    }
+}
+
 impl Add for Complex {
     type Output = Self;
 

@@ -130,4 +130,45 @@ mod tests {
         // y = 1 + x + 2x^2 + 3x^3 + 5x^4 + 8x^5
         assert_eq!("1 + x + 2x^2 + 3x^3 + 5x^4 + 8x^5", format!("{}", pol));
     }
+
+    #[test]
+    fn evalute_constant() {
+        let point = Complex { re: 1., im: 1. };
+        let pol = Polynomial::new(vec![3]); // y = 3
+        let actual = pol.evaluate(&point);
+        assert_eq!(Complex {re: 3., im: 0.}, actual)
+    }
+
+
+    #[test]
+    fn evalute_linear() {
+        let point = Complex { re: 3., im: 2. };
+        let pol = Polynomial::new(vec![0, 1]); // y = x
+        let actual = pol.evaluate(&point);
+        assert_eq!(point, actual)
+    }
+
+    #[test]
+    fn evaluate_pol3() {
+        let point = Complex { re: 4., im: 2. };
+        let pol = Polynomial::new(vec![0, 1, -2, 1]); // 3
+        let actual = pol.evaluate(&point);
+        assert_eq!(Complex{re: -4., im: 58. }, actual)
+    }
+
+    #[test]
+    fn evaluate_pol3_0() {
+        let point = Complex { re: 0., im: 0. };
+        let pol = Polynomial::new(vec![0, 1, -2, 1]); // y = x^3 - 2x^2 + x
+        let actual = pol.evaluate(&point);
+        assert_eq!(Complex{re: 0., im: 0. }, actual)
+    }
+
+    #[test]
+    fn evaluate_pol3_neg() {
+        let point = Complex { re: -7.5, im: -5.2 };
+        let pol = Polynomial::new(vec![0, 1, -2, 1]); // y = x^3 - 2x^2 + x
+        let actual = pol.evaluate(&point);
+        assert_eq!(Complex{re: 120.605, im: -898.092 }, actual)
+    }
 }
