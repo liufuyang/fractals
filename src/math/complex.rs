@@ -26,6 +26,14 @@ impl Complex {
     }
 
     pub fn powi(&self, p: i32) -> Self {
+        if p == 0 {
+            return Complex {re: 1., im: 0.}
+        }
+
+        if p == 1 {
+            return *self;
+        }
+
         let r = self.abs().powi(p);
         let theta = self.arg() * (p as f64);
         Complex {
