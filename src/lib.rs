@@ -59,20 +59,13 @@ fn clamp01(v: f64) -> f64 {
     f64::min(f64::max(0., v), 1.)
 }
 
-fn hsl_to_rgb(color: Hsl) -> Rgb<u8> {
-    let rgb = color.to_rgb();
-    Rgb([
-        (rgb.get_red() ) as u8,
-        (rgb.get_green() ) as u8,
-        (rgb.get_blue() ) as u8,
-        ])
-}
-
-fn color_from_root(root: Complex, iter: u32, max_iter: u32) -> Hsl {
+fn color_from_root(root: Complex, iter: u32, max_iter: u32) -> Rgb<u8> {
     let hue = clamp01(f64::abs(0.5 - root.arg() / (PI * 2.))) * 360.;
     let sat = clamp01(f64::abs(0.5 / root.abs())) * 100.;
     let lum = ((max_iter - iter) as f32) / (max_iter as f32) * 100.;
-    Hsl::from(hue as f32, sat as f32, lum as f32)
+    let hsl = Hsl::from(hue as f32, sat as f32, lum as f32);
+    let (r,g,b) = hsl.to_rgb().as_tuple();
+    Rgb([r as u8, g as u8,b as u8])
 }
 
 pub fn render_image(pol: Polynomial, field: Field) -> RgbImage {
@@ -84,7 +77,7 @@ pub fn render_image(pol: Polynomial, field: Field) -> RgbImage {
         let point = Complex { re, im };
         let (root, iter) = newton_method_approximate(&pol, &dpol, point, max_iter);
         let color = color_from_root(root, iter, max_iter);
-        image.put_pixel(i, j, hsl_to_rgb(color));
+        image.put_pixel(i, j, color);
     }
 
     return image;
