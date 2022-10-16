@@ -7,9 +7,8 @@ use image::{RgbImage, Rgb};
 use itertools::{Itertools, Product};
 use std::f32::consts::PI;
 
-pub fn newton_method_approximate(pol: &Polynomial, point: Complex, max_iter: u32) -> (Complex, u32) {
+pub fn newton_method_approximate(pol: &Polynomial, dpol: &Polynomial, point: Complex, max_iter: u32) -> (Complex, u32) {
     let tolerance = f64::powi(10.0, -6);
-    let dpol = pol.derivative();
 
     let mut iter = 0;
     let mut diff = 10.0;
@@ -79,10 +78,11 @@ fn color_from_root(root: Complex, iter: u32, max_iter: u32) -> Hsl {
 pub fn render_image(pol: Polynomial, field: Field) -> RgbImage {
     let mut image = RgbImage::new(field.ssize, field.ssize);
     let max_iter = 100;
+    let dpol = pol.derivative();
     for (i, j) in field.iterate() {
         let (re, im) = field.project((i, j));
         let point = Complex { re, im };
-        let (root, iter) = newton_method_approximate(&pol, point, max_iter);
+        let (root, iter) = newton_method_approximate(&pol, &dpol, point, max_iter);
         let color = color_from_root(root, iter, max_iter);
         image.put_pixel(i, j, hsl_to_rgb(color));
     }
