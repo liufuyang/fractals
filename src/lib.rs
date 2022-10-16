@@ -61,10 +61,11 @@ fn clamp01(v: f64) -> f64 {
 }
 
 fn hsl_to_rgb(color: Hsl) -> Rgb<u8> {
+    let rgb = color.to_rgb();
     Rgb([
-        (color.get_red() ) as u8,
-        (color.get_green() ) as u8,
-        (color.get_blue() ) as u8,
+        (rgb.get_red() ) as u8,
+        (rgb.get_green() ) as u8,
+        (rgb.get_blue() ) as u8,
         ])
 }
 
