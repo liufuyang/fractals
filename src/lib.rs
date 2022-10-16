@@ -5,7 +5,7 @@ use std::ops::Range;
 use colors_transform::{Hsl, Color};
 use image::{RgbImage, Rgb};
 use itertools::{Itertools, Product};
-use std::f32::consts::PI;
+use std::f64::consts::PI;
 
 pub fn newton_method_approximate(pol: &Polynomial, dpol: &Polynomial, point: Complex, max_iter: u32) -> (Complex, u32) {
     let tolerance = f64::powi(10.0, -6);
