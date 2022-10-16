@@ -1,4 +1,4 @@
-use crate::math::complex::Complex;
+use crate::math::complex::{Complex, ZERO};
 use std::fmt;
 
 #[derive(Debug)]
@@ -31,7 +31,7 @@ impl Polynomial {
     pub fn evaluate(&self, z: &Complex) -> Complex {
         self.coeff.iter()
             .enumerate()
-            .fold(Complex::zero(), |acc, (index, coef)| {
+            .fold(ZERO, |acc, (index, coef)| {
                 if coef == &0 {
                     return acc;
                 }

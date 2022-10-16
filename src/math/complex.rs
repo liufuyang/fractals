@@ -7,6 +7,7 @@ pub struct Complex {
     pub im: f64
 }
 
+pub const ZERO: Complex = Complex {re: 0., im: 0.};
 impl Complex {
     pub fn abs(&self) -> f64 {
         (self.re.powi(2) + self.im.powi(2)).sqrt()
@@ -44,13 +45,6 @@ impl Complex {
 
     pub fn euclidean_distance(&self, other: &Self) -> f64 {
         ((self.re - other.re).powi(2) + (self.im - other.im).powi(2)).sqrt()
-    }
-
-    pub fn zero() -> Complex {
-        Complex {
-            re: 0.,
-            im: 0.
-        }
     }
 }
 
