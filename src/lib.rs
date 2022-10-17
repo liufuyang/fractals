@@ -20,7 +20,7 @@ pub fn newton_method_approximate(pol: &Polynomial, dpol: &Polynomial, point: Com
         let div = val / der;
 
         let next = guess - div;
-        let dist = next.euclidean_distance(&guess);
+        let dist = distance(next, guess);
         guess = next;
         diff = dist;
 
@@ -30,6 +30,12 @@ pub fn newton_method_approximate(pol: &Polynomial, dpol: &Polynomial, point: Com
     return (guess, iter);
 }
 
+// kind of equlidean distance, just without sqrt
+// because we only use the result for termination
+// check in comparion with TOLERANCE
+fn distance(c1: Complex, c2: Complex) -> f64 {
+    (c1.re - c2.re).powi(2) + (c1.im - c2.im).powi(2)
+}
 
 pub struct Field {
     pub source: (u32, u32),

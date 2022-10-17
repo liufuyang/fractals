@@ -42,10 +42,6 @@ impl Complex {
             im: f64::sin(theta) * r
         }
     }
-
-    pub fn euclidean_distance(&self, other: &Self) -> f64 {
-        ((self.re - other.re).powi(2) + (self.im - other.im).powi(2)).sqrt()
-    }
 }
 
 impl PartialEq for Complex {
