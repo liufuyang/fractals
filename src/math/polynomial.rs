@@ -29,16 +29,17 @@ impl Polynomial {
     }
 
     pub fn evaluate(&self, z: &Complex) -> Complex {
-        self.coeff.iter()
-            .enumerate()
-            .fold(ZERO, |acc, (index, coef)| {
-                if coef == &0 {
-                    return acc;
-                }
-                let p = z.powi(index as i32);
-                let pm = p * (*coef as f64);
-                acc + pm
-            })
+        let mut acc = ZERO;
+        for i in 0..self.coeff.len() {
+            let coef = self.coeff[i];
+            if coef == 0 {
+                continue;
+            }
+            let p = z.powi(i as i32);
+            let pm = p * (coef as f64);
+            acc = acc + pm
+        }
+        acc
     }
 
     fn show_part(index: usize, coef: i32) -> String {
