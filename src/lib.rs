@@ -1,12 +1,17 @@
 pub mod math;
-use math::polynomial::Polynomial;
-use math::complex::Complex;
-use std::ops::Range;
-use image::{RgbImage, Rgb};
+use image::{Rgb, RgbImage};
 use itertools::{Itertools, Product};
+use math::complex::Complex;
+use math::polynomial::Polynomial;
 use std::f32::consts::PI;
+use std::ops::Range;
 
-pub fn newton_method_approximate(pol: &Polynomial, dpol: &Polynomial, point: Complex, max_iter: u32) -> (Complex, u32) {
+pub fn newton_method_approximate(
+    pol: &Polynomial,
+    dpol: &Polynomial,
+    point: Complex,
+    max_iter: u32,
+) -> (Complex, u32) {
     let tolerance = f64::powi(10.0, -6);
 
     let mut iter = 0;
@@ -54,8 +59,8 @@ impl Field {
     fn project(&self, spoint: (u32, u32)) -> (f64, f64) {
         let scale = self.tsize / self.ssize as f64;
         (
-                self.target.0 + (spoint.0 as f64) * scale,
-                self.target.1 + (spoint.1 as f64) * scale
+            self.target.0 + (spoint.0 as f64) * scale,
+            self.target.1 + (spoint.1 as f64) * scale,
         )
     }
 }
@@ -72,7 +77,7 @@ fn color_from_root(root: Complex, iter: u32, max_iter: u32) -> Rgb<u8> {
     let hue = clamp01(f32::abs(0.5 - arg / (PI * 2.)));
     let sat = clamp01(f32::abs(0.5 / abs));
     let lum = clamp01(f32::abs(0.5 - iter / max_iter));
-    let (r,g,b) = hsl_to_rgb(hue, sat, lum);
+    let (r, g, b) = hsl_to_rgb(hue, sat, lum);
     Rgb([(r * 255.) as u8, (g * 255.) as u8, (b * 255.) as u8])
 }
 
@@ -86,7 +91,7 @@ fn hsl_to_rgb(h: f32, s: f32, l: f32) -> (f32, f32, f32) {
     let p = 2. * l - q;
 
     let r = f32::max(0., hue_to_rgb(p, q, h + (1. / 3.)));
-    let g = f32::max(0., hue_to_rgb(p, q, h ));
+    let g = f32::max(0., hue_to_rgb(p, q, h));
     let b = f32::max(0., hue_to_rgb(p, q, h - (1. / 3.)));
 
     (r, g, b)
@@ -96,14 +101,14 @@ fn hue_to_rgb(p: f32, q: f32, h: f32) -> f32 {
     let h = match h {
         h if h < 0. => h + 1.,
         h if h > 1. => h - 1.,
-        _ => h
+        _ => h,
     };
 
     match h {
         h if h < 1. / 6. => p + ((q - p) * 6. * h),
         h if h < 1. / 2. => q,
         h if h < 2. / 3. => p + ((q - p) * 6. * ((2. / 3.) - h)),
-        _ => p
+        _ => p,
     }
 }
 

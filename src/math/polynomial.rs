@@ -3,29 +3,28 @@ use std::fmt;
 
 #[derive(Debug)]
 pub struct Polynomial {
-    coeff: Vec<i32>
+    coeff: Vec<i32>,
 }
 
 impl Polynomial {
     pub fn new(coeff: Vec<i32>) -> Self {
-        Polynomial {
-            coeff
-        }
+        Polynomial { coeff }
     }
 
     pub fn derivative(&self) -> Polynomial {
         if self.coeff.len() <= 1 {
-            return Polynomial::new(vec![])
+            return Polynomial::new(vec![]);
         }
 
-        let new_coef = self.coeff.iter().enumerate()
+        let new_coef = self
+            .coeff
+            .iter()
+            .enumerate()
             .skip(1)
             .map(|(index, coef)| coef * (index as i32))
             .collect();
 
-        Polynomial {
-            coeff: new_coef
-        }
+        Polynomial { coeff: new_coef }
     }
 
     pub fn evaluate(&self, z: &Complex) -> Complex {
@@ -43,8 +42,12 @@ impl Polynomial {
     }
 
     fn show_part(index: usize, coef: i32) -> String {
-        let s_coef = if coef == 1 { String::from("") } else { format!("{}", coef) };
-        match  index {
+        let s_coef = if coef == 1 {
+            String::from("")
+        } else {
+            format!("{}", coef)
+        };
+        match index {
             0 => format!("{}", coef),
             1 => format!("{}x", s_coef),
             _ => format!("{}x^{}", s_coef, index),
@@ -52,11 +55,12 @@ impl Polynomial {
     }
 }
 
-
 impl fmt::Display for Polynomial {
-
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let res = self.coeff.iter().enumerate()
+        let res = self
+            .coeff
+            .iter()
+            .enumerate()
             .filter(|(_, coef)| **coef > 0)
             .map(|(index, coef)| Polynomial::show_part(index, *coef))
             .reduce(|a, b| a + " + " + &b)
@@ -135,9 +139,8 @@ mod tests {
         let point = Complex { re: 1., im: 1. };
         let pol = Polynomial::new(vec![3]); // y = 3
         let actual = pol.evaluate(&point);
-        assert_eq!(Complex {re: 3., im: 0.}, actual)
+        assert_eq!(Complex { re: 3., im: 0. }, actual)
     }
-
 
     #[test]
     fn evalute_linear() {
@@ -152,7 +155,7 @@ mod tests {
         let point = Complex { re: 4., im: 2. };
         let pol = Polynomial::new(vec![0, 1, -2, 1]); // 3
         let actual = pol.evaluate(&point);
-        assert_eq!(Complex{re: -4., im: 58. }, actual)
+        assert_eq!(Complex { re: -4., im: 58. }, actual)
     }
 
     #[test]
@@ -160,7 +163,7 @@ mod tests {
         let point = Complex { re: 0., im: 0. };
         let pol = Polynomial::new(vec![0, 1, -2, 1]); // y = x^3 - 2x^2 + x
         let actual = pol.evaluate(&point);
-        assert_eq!(Complex{re: 0., im: 0. }, actual)
+        assert_eq!(Complex { re: 0., im: 0. }, actual)
     }
 
     #[test]
@@ -168,6 +171,12 @@ mod tests {
         let point = Complex { re: -7.5, im: -5.2 };
         let pol = Polynomial::new(vec![0, 1, -2, 1]); // y = x^3 - 2x^2 + x
         let actual = pol.evaluate(&point);
-        assert_eq!(Complex{re: 120.605, im: -898.092 }, actual)
+        assert_eq!(
+            Complex {
+                re: 120.605,
+                im: -898.092
+            },
+            actual
+        )
     }
 }

@@ -1,5 +1,5 @@
-use newton_factal::{render_image, Field};
 use newton_factal::math::polynomial::Polynomial;
+use newton_factal::{render_image, Field};
 
 fn main() {
     let pol = Polynomial::new(vec![-1, 0, 0, 1]);

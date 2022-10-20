@@ -1,13 +1,13 @@
-use std::ops::{Add, Sub, Div, Mul};
 use std::fmt;
+use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Complex {
     pub re: f64,
-    pub im: f64
+    pub im: f64,
 }
 
-pub const ZERO: Complex = Complex {re: 0., im: 0.};
+pub const ZERO: Complex = Complex { re: 0., im: 0. };
 impl Complex {
     pub fn abs(&self) -> f64 {
         (self.re.powi(2) + self.im.powi(2)).sqrt()
@@ -22,13 +22,13 @@ impl Complex {
         let theta = p * self.arg();
         Complex {
             re: f64::cos(theta) * r,
-            im: f64::sin(theta) * r
+            im: f64::sin(theta) * r,
         }
     }
 
     pub fn powi(&self, p: i32) -> Self {
         if p == 0 {
-            return Complex {re: 1., im: 0.}
+            return Complex { re: 1., im: 0. };
         }
 
         if p == 1 {
@@ -39,7 +39,7 @@ impl Complex {
         let theta = self.arg() * (p as f64);
         Complex {
             re: f64::cos(theta) * r,
-            im: f64::sin(theta) * r
+            im: f64::sin(theta) * r,
         }
     }
 }
@@ -67,7 +67,7 @@ impl Sub for Complex {
     fn sub(self, rhs: Self) -> Self::Output {
         Self {
             re: self.re - rhs.re,
-            im: self.im - rhs.im
+            im: self.im - rhs.im,
         }
     }
 }
@@ -79,7 +79,7 @@ impl Div for Complex {
         let re = (self.re * rhs.re + self.im * rhs.im) / k;
         let im = (self.im * rhs.re - self.re * rhs.im) / k;
 
-        Self { re, im}
+        Self { re, im }
     }
 }
 
@@ -88,7 +88,7 @@ impl Mul<f64> for Complex {
     fn mul(self, rhs: f64) -> Self::Output {
         Self {
             re: self.re * rhs,
-            im: self.im * rhs
+            im: self.im * rhs,
         }
     }
 }
