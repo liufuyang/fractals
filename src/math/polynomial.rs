@@ -64,7 +64,7 @@ impl fmt::Display for Polynomial {
             .filter(|(_, coef)| **coef > 0)
             .map(|(index, coef)| Polynomial::show_part(index, *coef))
             .reduce(|a, b| a + " + " + &b)
-            .unwrap_or(String::from(""));
+            .unwrap_or_else(|| String::from(""));
 
         write!(f, "{}", res)
     }

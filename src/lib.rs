@@ -31,7 +31,7 @@ pub fn newton_method_approximate(
         iter += 1;
     }
 
-    return (guess, iter);
+    (guess, iter)
 }
 
 // kind of equlidean distance, just without sqrt
@@ -53,7 +53,8 @@ impl Field {
     fn iterate(&self) -> Product<Range<u32>, Range<u32>> {
         let x_range = self.source.0..(self.source.0 + self.ssize);
         let y_range = self.source.1..(self.source.1 + self.ssize);
-        return (x_range).cartesian_product(y_range);
+
+        (x_range).cartesian_product(y_range)
     }
 
     fn project(&self, spoint: (u32, u32)) -> (f64, f64) {
@@ -124,5 +125,5 @@ pub fn render_image(pol: Polynomial, field: Field) -> RgbImage {
         image.put_pixel(i, j, color);
     }
 
-    return image;
+    image
 }
