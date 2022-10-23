@@ -1,22 +1,13 @@
 use newton_factal::math::polynomial::Polynomial;
 use newton_factal::{render_image, Field};
-use std::net::TcpListener;
-
-use std::io::prelude::*;
 use std::io::Cursor;
-use std::net::TcpStream;
 
-fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
-        handle_connection(stream);
-    }
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Request, Response, Server};
+use std::convert::Infallible;
+use std::net::SocketAddr;
 
-    println!("Shutting down.");
-}
-
-fn handle_connection(mut stream: TcpStream) {
+async fn hello_world(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
     let pol = Polynomial::new(vec![-1, 0, 0, 1]);
     let field = Field {
         source: (0, 0),
@@ -26,13 +17,32 @@ fn handle_connection(mut stream: TcpStream) {
         tsize: 10.0,
     };
     let image = render_image(pol, field);
-    let headers = ["HTTP/1.1 200 OK", "Content-type: image/jpeg", "\r\n"];
-    let mut response: Vec<u8> = headers.join("\r\n").to_string().into_bytes();
     let mut data = Cursor::new(Vec::new());
     image
         .write_to(&mut data, image::ImageOutputFormat::Jpeg(255))
         .expect("Unable to write");
-    response.extend(&data.get_ref()[..]);
-    stream.write_all(&response).unwrap();
-    stream.flush().unwrap();
+    let d: Vec<u8> = data.get_ref().clone();
+    let mut response = Response::new(Body::empty());
+    *response.body_mut() = d.into();
+    Ok(response)
+}
+
+#[tokio::main]
+async fn main() {
+    // We'll bind to 127.0.0.1:3000
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+
+    // A `Service` is needed for every connection, so this
+    // creates one from our `hello_world` function.
+    let make_svc = make_service_fn(|_conn| async {
+        // service_fn converts our function into a `Service`
+        Ok::<_, Infallible>(service_fn(hello_world))
+    });
+
+    let server = Server::bind(&addr).serve(make_svc);
+
+    // Run this server for... forever!
+    if let Err(e) = server.await {
+        eprintln!("server error: {}", e);
+    }
 }
