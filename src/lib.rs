@@ -1,5 +1,6 @@
 pub mod math;
 pub mod rendering;
+pub mod server;
 
 use itertools::Itertools;
 

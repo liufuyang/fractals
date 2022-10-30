@@ -2,10 +2,10 @@ use std::time::Duration;
 
 use criterion::BenchmarkId;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use newton_factal::{Field, newton_method_field};
 use newton_factal::math::complex::Complex;
 use newton_factal::math::polynomial::Polynomial;
 use newton_factal::rendering::render_image;
+use newton_factal::{newton_method_field, Field};
 
 fn criterion_benchmark(c: &mut Criterion) {
     let mut group = c.benchmark_group("render");
