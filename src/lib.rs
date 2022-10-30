@@ -1,10 +1,30 @@
 pub mod math;
-use image::{Rgb, RgbImage};
-use itertools::{Itertools, Product};
-use math::color::color_from_root;
+pub mod rendering;
+
+use itertools::Itertools;
+
 use math::complex::Complex;
 use math::polynomial::Polynomial;
-use std::ops::Range;
+
+pub struct Field {
+    pub source: Complex,
+    pub size: f64,
+    pub grid: u32,
+}
+pub struct Solution {
+    pub root: Complex,
+    pub iter: u32,
+}
+
+pub fn newton_method_field(pol: &Polynomial, field: &Field, max_iter: u32) -> Vec<Solution> {
+    let dpol = pol.derivative();
+
+    field
+        .values()
+        .iter()
+        .map(|point| newton_method_approximate(&pol, &dpol, point, max_iter))
+        .collect()
+}
 
 pub fn newton_method_approximate(
     pol: &Polynomial,
@@ -34,17 +54,12 @@ pub fn newton_method_approximate(
     Solution { root: guess, iter }
 }
 
-// kind of equlidean distance, just without sqrt
-// because we only use the result for termination
-// check in comparion with TOLERANCE
+// euqlidean distance without sqrt.
+// sqrt is expensive and I don't need the exact distance here
+// since I only use the result for the termination
+// check in comparsion with TOLERANCE.
 fn distance(c1: Complex, c2: Complex) -> f64 {
     (c1.re - c2.re).powi(2) + (c1.im - c2.im).powi(2)
-}
-
-pub struct Field {
-    pub source: Complex,
-    pub size: f64,
-    pub grid: u32,
 }
 
 impl Field {
@@ -59,32 +74,4 @@ impl Field {
             .map(|(re, im)| Complex { re, im })
             .collect()
     }
-}
-
-pub struct Solution {
-    root: Complex,
-    iter: u32,
-}
-
-pub fn render_image(pol: Polynomial, field: Field) -> RgbImage {
-    let max_iter = 100;
-    let dpol = pol.derivative();
-
-    let solutions: Vec<Solution> = field
-        .values()
-        .iter()
-        .map(|point| newton_method_approximate(&pol, &dpol, point, max_iter))
-        .collect();
-
-    let mut image = RgbImage::new(field.grid, field.grid);
-    let mut iter = solutions.iter();
-    for i in 0..field.grid {
-        for j in 0..field.grid {
-            let solution = iter.next().expect("not enough values in solutions");
-            let (r, g, b) = color_from_root(solution.root, solution.iter, max_iter);
-            image.put_pixel(i, j, Rgb([r, g, b]));
-        }
-    }
-
-    image
 }

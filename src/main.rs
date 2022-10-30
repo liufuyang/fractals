@@ -1,6 +1,7 @@
 use newton_factal::math::complex::Complex;
 use newton_factal::math::polynomial::Polynomial;
-use newton_factal::{render_image, Field};
+use newton_factal::rendering::render_image;
+use newton_factal::{newton_method_field, Field};
 use std::io::Cursor;
 
 use hyper::service::{make_service_fn, service_fn};
@@ -68,7 +69,9 @@ fn parse_pol_param(params: &HashMap<String, String>) -> Polynomial {
 }
 
 fn handle_image_request(pol: Polynomial, field: Field) -> Vec<u8> {
-    let image = render_image(pol, field);
+    let max_iter = 100;
+    let solutins = newton_method_field(&pol, &field, max_iter);
+    let image = render_image(&solutins, &field, max_iter);
     let mut data = Cursor::new(Vec::new());
     image
         .write_to(&mut data, image::ImageOutputFormat::Jpeg(255))

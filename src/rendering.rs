@@ -1,11 +1,27 @@
-use super::complex::Complex;
+use image::{Rgb, RgbImage};
 use std::f32::consts::PI;
 
-pub fn color_from_root(root: Complex, iter: u32, max_iter: u32) -> (u8, u8, u8) {
-    let iter = iter as f32;
+use crate::{Field, Solution};
+
+pub fn render_image(solutions: &Vec<Solution>, field: &Field, max_iter: u32) -> RgbImage {
+    let mut image = RgbImage::new(field.grid, field.grid);
+    let mut iter = solutions.iter();
+    for i in 0..field.grid {
+        for j in 0..field.grid {
+            let solution = iter.next().expect("not enough values in solutions");
+            let (r, g, b) = color_from_root(solution, max_iter);
+            image.put_pixel(i, j, Rgb([r, g, b]));
+        }
+    }
+
+    image
+}
+
+fn color_from_root(solution: &Solution, max_iter: u32) -> (u8, u8, u8) {
+    let iter = solution.iter as f32;
     let max_iter = max_iter as f32;
-    let arg = root.arg() as f32;
-    let abs = root.abs() as f32;
+    let arg = solution.root.arg() as f32;
+    let abs = solution.root.abs() as f32;
     let hue = clamp01(f32::abs(0.5 - arg / (PI * 2.)));
     let sat = clamp01(f32::abs(0.5 / abs));
     let lum = clamp01(f32::abs(0.5 - iter / max_iter));
