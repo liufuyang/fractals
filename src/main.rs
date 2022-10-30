@@ -66,7 +66,7 @@ fn parse_pol_param(params: &HashMap<String, String>) -> Polynomial {
     let coef: Vec<i32> = params
         .get("pol")
         .map(|s| s.split(",").map(|s| s.parse().unwrap()).collect())
-        .unwrap();
+        .unwrap_or(vec![-1, 0, 0, 1]);
     Polynomial::new(coef)
 }
 
