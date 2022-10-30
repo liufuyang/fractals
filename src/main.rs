@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
-async fn hello_world(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+async fn api(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     let mut response = Response::new(Body::empty());
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/") => {
@@ -76,7 +76,7 @@ async fn main() {
     // creates one from our `hello_world` function.
     let make_svc = make_service_fn(|_conn| async {
         // service_fn converts our function into a `Service`
-        Ok::<_, Infallible>(service_fn(hello_world))
+        Ok::<_, Infallible>(service_fn(api))
     });
 
     let server = Server::bind(&addr).serve(make_svc);
