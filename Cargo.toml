@@ -13,6 +13,7 @@ use = "0.0.0"
 hyper = { version = "0.14", features = ["full"] }
 tokio = { version = "1", features = ["full"] }
 url = "2.3.1"
+rand = "0.8.5"
 
 [dev-dependencies]
 criterion = "0.3"
