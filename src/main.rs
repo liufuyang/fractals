@@ -1,3 +1,4 @@
+use newton_factal::math::complex::Complex;
 use newton_factal::math::polynomial::Polynomial;
 use newton_factal::{render_image, Field};
 use std::io::Cursor;
@@ -7,7 +8,6 @@ use hyper::{Body, Method, Request, Response, Server, StatusCode, Uri};
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
-
 
 async fn api(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     let mut response = Response::new(Body::empty());
@@ -28,14 +28,13 @@ async fn api(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 }
 
 fn parse_params(uri: &Uri) -> HashMap<String, String> {
-    uri
-    .query()
-    .map(|v| {
-        url::form_urlencoded::parse(v.as_bytes())
-        .into_owned()
-        .collect()
-    }).unwrap_or_else(HashMap::new)
-
+    uri.query()
+        .map(|v| {
+            url::form_urlencoded::parse(v.as_bytes())
+                .into_owned()
+                .collect()
+        })
+        .unwrap_or_else(HashMap::new)
 }
 
 fn parse_field_params(params: &HashMap<String, String>) -> Field {
@@ -44,11 +43,9 @@ fn parse_field_params(params: &HashMap<String, String>) -> Field {
     let ty: f64 = parse_param_f64(params, "ty", -5.);
 
     Field {
-        source: (0, 0),
-        ssize: 512,
-
-        target: (tx, ty),
-        tsize: tsize,
+        source: Complex { re: tx, im: ty },
+        size: tsize,
+        grid: 512,
     }
 }
 
