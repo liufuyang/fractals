@@ -1,6 +1,8 @@
 use crate::math::complex::{Complex, ZERO};
 use std::fmt;
 
+// represents a polynomial
+// the i-th coefficient is the coefficiet in front of x^i
 #[derive(Debug)]
 pub struct Polynomial {
     coeff: Vec<i32>,
@@ -11,6 +13,7 @@ impl Polynomial {
         Polynomial { coeff }
     }
 
+    // derivates coefficient
     pub fn derivative(&self) -> Polynomial {
         if self.coeff.len() <= 1 {
             return Polynomial::new(vec![]);
@@ -27,6 +30,8 @@ impl Polynomial {
         Polynomial { coeff: new_coef }
     }
 
+    // returns the value of coefficient at a given point
+    // todo clean up type casts
     pub fn evaluate(&self, z: &Complex) -> Complex {
         let mut acc = ZERO;
         for i in 0..self.coeff.len() {
@@ -41,6 +46,7 @@ impl Polynomial {
         acc
     }
 
+    // todo do I need this method?
     fn show_part(index: usize, coef: i32) -> String {
         let s_coef = if coef == 1 {
             String::from("")

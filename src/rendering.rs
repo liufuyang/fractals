@@ -3,6 +3,10 @@ use std::f32::consts::PI;
 
 use crate::{Field, Solution};
 
+// turn a set of solutions and a field into a a pretty picture
+// todo I need to find a better abstraction for representing solutions of the field.
+// currently the logic of solving a field is not encapsulated well and this method needs
+// to know how solution for a field works.
 pub fn render_image(solutions: &Vec<Solution>, field: &Field, max_iter: u32) -> RgbImage {
     let mut image = RgbImage::new(field.grid, field.grid);
     let mut iter = solutions.iter();
@@ -17,6 +21,14 @@ pub fn render_image(solutions: &Vec<Solution>, field: &Field, max_iter: u32) -> 
     image
 }
 
+// calculates the rgb color of a solution
+// the idea is that we start with HSL color definition, where
+// hue is based on arg (angle of the complex number)
+// sat is based on abs (size of the complex value)
+// lum is based on the number of iterations it took to calculate
+// todo:
+// - cache hue and sat, hue and sat depend on the root and there are only N roots for n-degree polynomial
+//   but we ran the same expensive calculations for each point in the image
 fn color_from_root(solution: &Solution, max_iter: u32) -> (u8, u8, u8) {
     let iter = solution.iter as f32;
     let max_iter = max_iter as f32;
@@ -29,6 +41,7 @@ fn color_from_root(solution: &Solution, max_iter: u32) -> (u8, u8, u8) {
     ((r * 255.) as u8, (g * 255.) as u8, (b * 255.) as u8)
 }
 
+// convert hsl to rgb, this is based on some code I found online
 fn hsl_to_rgb(h: f32, s: f32, l: f32) -> (f32, f32, f32) {
     let q = if l < 0.5 {
         l * (1. + s)
