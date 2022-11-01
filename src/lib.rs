@@ -3,6 +3,7 @@ pub mod rendering;
 pub mod server;
 
 use itertools::Itertools;
+use rayon::prelude::*;
 
 use math::complex::Complex;
 use math::polynomial::Polynomial;
@@ -32,7 +33,7 @@ pub fn newton_method_field(pol: &Polynomial, field: &Field, max_iter: u32) -> Ve
 
     field
         .values()
-        .iter()
+        .par_iter()
         .map(|point| newton_method_approximate(&pol, &dpol, point, max_iter))
         .collect()
 }
@@ -84,7 +85,7 @@ impl Field {
         let re_range = (0..self.grid).map(|i| self.source.re + (i as f64) * step);
         let im_range = (0..self.grid).map(|i| self.source.im + (i as f64) * step);
 
-        (re_range)
+        re_range
             .cartesian_product(im_range)
             .map(|(re, im)| Complex { re, im })
             .collect()
